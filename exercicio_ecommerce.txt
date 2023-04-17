@@ -1,0 +1,28 @@
+e-commerce em memoria
+cliente
+    id
+    nome
+    endereco
+
+produtos
+    id
+    nome
+    descricao
+    valor
+    quantidade_estoque
+
+pedido
+    id
+    id_cliente
+    valor_total
+    data
+
+pedido_produto
+    id
+    id_pedido
+    id_produto
+    quantidade
+    valor_vendido_no_ato_do_carrinho
+
+vai precisar de menu
+para cadastrar, listar e mostrar pedidos
