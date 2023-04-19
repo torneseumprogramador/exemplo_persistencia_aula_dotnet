@@ -20,3 +20,11 @@ tabela_de_preco
 No final da operação, ou seja quando o cliente estiver saindo o 
 estacionamento mostrar o valor total que ele pagará no estacionamento
 
+exercicio persistencia embaralhado
+
+Grupo 1 - https://github.com/raiarruda/Upskilling-Exercicio3/
+Grupo 2 - https://github.com/williamcc89/dotnet-exercicio1-upskilling
+Grupo 3 - https://github.com/zoehler/estacionamento-grupo-6
+grupo 4 - https://github.com/adriano-sick/Console_App_Exercicio
+grupo 5 - https://github.com/Joaovictortps22/EstacionamentoConsole
+grupo 6 - https://github.com/thiagonfss/UpSkilling

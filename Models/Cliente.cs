@@ -12,6 +12,11 @@ public class Cliente
         this.id = _id;
     }
 
+    public Cliente(int _id)
+    {
+        this.id = _id.ToString();
+    }
+
     private string id;
     public string Id
     { 
