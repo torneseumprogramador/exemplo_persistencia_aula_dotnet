@@ -79,10 +79,38 @@
 // }
 
 
-using console_app.Models;
 using console_app.Servicos;
+using console_app.Models;
 
-while(true)
+var leticia = new Cliente(); // encapsulamento
+leticia.Nome = "sss";
+var teste = leticia.Nome;
+
+var sss = leticia.CNPJ;
+
+leticia.enderecoCompletoInternoParaOCsProj = "";
+
+
+Cliente.Salvar(leticia);
+
+leticia.Salvar();
+
+if(leticia.Nome == null) leticia.Nome = string.Empty;
+var leandro = new Cliente();
+var leandros = new Cliente{ Nome = "", Telefone = "" };
+
+var leandro4 = new Cliente(1);
+leandro4.Salvar();
+
+
+
+new Carro() { Id = 1, Nome = "Fiesta", Marca = "Ford", Modelo = "XPT0" }.Salvar();
+
+var car = new Carro() { Id = 1, Nome = "Fiesta", Marca = "Ford", Modelo = "XPT0" };
+CarroService.Salvar(car);
+
+
+while (true)
 {
     Console.Clear();
     Console.WriteLine("Digite uma das opções abaixo:");

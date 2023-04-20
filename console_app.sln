@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test", "test\test.csproj", "{C443D65B-51A9-4B44-9CF0-EFCA63C1568C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "anima", "app\anima.csproj", "{C0F72A8D-E599-474E-9587-C0057907F999}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{79B550BD-6EDE-4F5D-8EC3-0D30A841DE09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79B550BD-6EDE-4F5D-8EC3-0D30A841DE09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79B550BD-6EDE-4F5D-8EC3-0D30A841DE09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79B550BD-6EDE-4F5D-8EC3-0D30A841DE09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C443D65B-51A9-4B44-9CF0-EFCA63C1568C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C443D65B-51A9-4B44-9CF0-EFCA63C1568C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C443D65B-51A9-4B44-9CF0-EFCA63C1568C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C443D65B-51A9-4B44-9CF0-EFCA63C1568C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0F72A8D-E599-474E-9587-C0057907F999}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0F72A8D-E599-474E-9587-C0057907F999}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0F72A8D-E599-474E-9587-C0057907F999}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0F72A8D-E599-474E-9587-C0057907F999}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
