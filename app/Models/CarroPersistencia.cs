@@ -11,6 +11,10 @@ namespace console_app.Models
             string stringJson = JsonSerializer.Serialize(this);
             string caminhoArquivo = Directory.GetCurrentDirectory() + "/clientes.json";
             File.WriteAllText(caminhoArquivo, stringJson);
+
+            //var carros = JsonPersistencia.Lista("carro.json");
+            //carros.Add(this);
+            //JsonPersistencia.Salvar("carro.json", carros);
         }
     }
 }

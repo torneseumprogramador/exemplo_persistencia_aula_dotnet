@@ -9,6 +9,5 @@ public class UnitTest1
     public void TestMethod1()
     {
         var cliente  = new Cliente();
-        cliente.
     }
 }

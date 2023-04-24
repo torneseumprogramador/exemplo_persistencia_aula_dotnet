@@ -81,7 +81,9 @@
 
 using console_app.Servicos;
 using console_app.Models;
-
+using JsonPersistencia;
+using PostgresPersistencia;
+/*
 var leticia = new Cliente(); // encapsulamento
 leticia.Nome = "sss";
 var teste = leticia.Nome;
@@ -108,7 +110,10 @@ new Carro() { Id = 1, Nome = "Fiesta", Marca = "Ford", Modelo = "XPT0" }.Salvar(
 
 var car = new Carro() { Id = 1, Nome = "Fiesta", Marca = "Ford", Modelo = "XPT0" };
 CarroService.Salvar(car);
+*/
 
+// var persistencia = new Persistencia(new PersistenciaJson("clientes.json"));
+var persistencia = new Persistencia(new PersistenciaPostgres("Server=yourServerAddress;Port=5432;Database=yourDatabase;User Id=postgres;Password=postgres;"));
 
 while (true)
 {
@@ -130,28 +135,21 @@ while (true)
             Console.WriteLine("Digite o telefone do cliente");
             var telefone = Console.ReadLine();
 
-            Cliente cliente = new Cliente() 
+            persistencia.Salvar(new Cliente() 
             { 
                 Nome = nome,
                 Telefone = telefone 
-            };
-
-            // var clientes = JsonPersistencia.Lista("clientes.json");
-            // clientes.Add(cliente);
-            // JsonPersistencia.Salvar("clientes.json", clientes);
-
-            var clientes = CsvPersistencia.Lista("clientes.csv");
-            clientes.Add(cliente);
-            CsvPersistencia.Salvar("clientes.csv", clientes);
+            });
 
             Console.WriteLine("Cliente cadastrado com sucesso ...");
             Thread.Sleep(1000);
             break;
         case "2":
             Console.WriteLine("=== Lista de clientes =====");
-            // var clientesArquivo = JsonPersistencia.Lista("clientes.json");
-            var clientesArquivo = CsvPersistencia.Lista("clientes.csv");
-            foreach(var cli in clientesArquivo)
+
+            var clientesArquivo = persistencia.Lista();
+            
+            foreach(Cliente cli in clientesArquivo)
             {
                 Console.WriteLine($"Nome: {cli.Nome}");
                 Console.WriteLine($"Telefone: {cli.Telefone}");
