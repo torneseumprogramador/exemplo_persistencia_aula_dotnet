@@ -112,8 +112,8 @@ var car = new Carro() { Id = 1, Nome = "Fiesta", Marca = "Ford", Modelo = "XPT0"
 CarroService.Salvar(car);
 */
 
-// var persistencia = new Persistencia(new PersistenciaJson("clientes.json"));
-var persistencia = new Persistencia(new PersistenciaPostgres("Server=yourServerAddress;Port=5432;Database=yourDatabase;User Id=postgres;Password=postgres;"));
+var persistencia = new Persistencia<Cliente>(new PersistenciaJson<Cliente>());
+// var persistencia = new Persistencia<Cliente>(new PersistenciaPostgres<Cliente>("Server=yourServerAddress;Port=5432;Database=yourDatabase;User Id=postgres;Password=postgres;"));
 
 while (true)
 {

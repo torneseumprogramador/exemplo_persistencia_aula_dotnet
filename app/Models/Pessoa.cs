@@ -1,7 +1,9 @@
+using ContratoPersistencia.Atributos;
 namespace console_app.Models
 {
     public class Pessoa
     {
+        [Identidade(NomeNoBancoDeDados = "xxx")]
         public string Documento { get; set; }
         public string Endereco { get; set; }
 

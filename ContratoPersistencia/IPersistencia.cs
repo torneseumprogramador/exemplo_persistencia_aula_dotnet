@@ -1,8 +1,8 @@
 ﻿namespace ContratoPersistencia;
-public interface IPersistencia
+public interface IPersistencia<T>
 {
-    void Incluir(IEntity entidade);
-    void Atualizar(IEntity entidade);
-    List<IEntity> Buscar(Type tipoEntidade);
-    void Apagar(IEntity entidade);
+    void Incluir(T entidade);
+    void Atualizar(T entidade);
+    List<T> Buscar();
+    void Apagar(T entidade);
 }

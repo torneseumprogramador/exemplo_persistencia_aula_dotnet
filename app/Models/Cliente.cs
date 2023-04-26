@@ -1,9 +1,9 @@
 using System;
-using ContratoPersistencia;
+using ContratoPersistencia.Atributos;
 
 namespace console_app.Models
 {
-    public class Cliente : IEntity
+    public class Cliente
     {
         public Cliente()
         {
@@ -11,8 +11,11 @@ namespace console_app.Models
             this.Id = timestamp;
         }
 
+        [Identidade(NomeNoBancoDeDados = "Id")]
         public int Id { get; set; }
+
         public string Nome { get; set; }
+
         public string Telefone { get; set; }
     }
 }

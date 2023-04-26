@@ -1,20 +1,22 @@
-﻿using System.Text.Json;
+﻿using System.Reflection;
+using System.Text.Json;
 using ContratoPersistencia;
+using ContratoPersistencia.Atributos;
 
 namespace JsonPersistencia;
 
-public class PersistenciaJson : IPersistencia
+public class PersistenciaJson<T> : IPersistencia<T>
 {
-    public PersistenciaJson(string _nomeArquivo)
+    public PersistenciaJson()
     {
-        this.nomeArquivo = _nomeArquivo;
+        this.nomeArquivo = typeof(T).Name.ToLower() + "s.json";
     }
 
     private string nomeArquivo;
 
-    public void Incluir(IEntity entidade)
+    public void Incluir(T entidade)
     {
-        var entidades = this.Buscar(entidade.GetType());
+        var entidades = this.Buscar();
         entidades.Add(entidade);
 
         string stringJson = JsonSerializer.Serialize(entidades);
@@ -22,11 +24,14 @@ public class PersistenciaJson : IPersistencia
         File.WriteAllText(caminhoArquivo, stringJson);
     }
 
-    public void Atualizar(IEntity entidade)
+    public void Atualizar(T entidade)
     {
-        var entidades = this.Buscar(entidade.GetType());
+        if(entidade == null) return;
+        
+        var entidades = this.Buscar();
 
-        var objLocalizado = entidades.Find(e => e.Id == entidade.Id);
+        var objLocalizado = descobrirObjeto(entidade, entidades);
+
         if(objLocalizado == null)
         {
             new Exception($"Entidade({entidade.GetType().Name}) não localizada");
@@ -47,25 +52,56 @@ public class PersistenciaJson : IPersistencia
         File.WriteAllText(caminhoArquivo, stringJson);
     }
 
-    public List<IEntity> Buscar(Type tipoEntidade)
+    private T? descobrirObjeto(T entidade, List<T> entidades)
+    {
+        if(entidade == null) return default(T);
+        
+        var propriedadeId = entidade.GetType().GetProperties().FirstOrDefault(p => Attribute.IsDefined(p, typeof(IdentidadeAttribute)));
+        if(propriedadeId == null) return default(T);
+        var valorPropriedadeId = propriedadeId.GetValue(entidade);
+        if(valorPropriedadeId == null) return default(T);
+
+        var objLocalizado = entidades.FirstOrDefault(e =>
+        {
+            if(e != null)
+            {
+                var propriedadeIdLocalizado = e.GetType().GetProperties().FirstOrDefault(p => Attribute.IsDefined(p, typeof(IdentidadeAttribute)));
+                if(propriedadeIdLocalizado != null)
+                {
+                    var valorPropriedadeIdLocalizado = propriedadeIdLocalizado.GetValue(e);
+                    if(valorPropriedadeIdLocalizado != null)
+                        return valorPropriedadeIdLocalizado.Equals(valorPropriedadeId);
+                }
+            }
+
+            return false;
+        });
+
+        return objLocalizado;
+    }
+
+    public List<T> Buscar()
     {
         string caminhoArquivo = Directory.GetCurrentDirectory() + "/" + nomeArquivo;
-        if (!File.Exists(caminhoArquivo)) return new List<IEntity>();
+        if (!File.Exists(caminhoArquivo)) return new List<T>();
         string stringJson = File.ReadAllText(caminhoArquivo);
 
-        Type tipoLista = typeof(List<>).MakeGenericType(tipoEntidade);
+        Type tipoLista = typeof(List<>).MakeGenericType(typeof(T));
         object? lista = JsonSerializer.Deserialize(stringJson, tipoLista);
 
-        if(lista == null) return new List<IEntity>();
+        if(lista == null) return new List<T>();
 
-        List<IEntity> entidades = (List<IEntity>)lista;
+        List<T> entidades = (List<T>)lista;
         return entidades;
     }
 
-    public void Apagar(IEntity entidade)
+    public void Apagar(T entidade)
     {
-       var entidades = this.Buscar(entidade.GetType());
-        entidades.RemoveAll(e => e.Id == entidade.Id);
+        var entidades = this.Buscar();
+        var objLocalizado = descobrirObjeto(entidade, entidades);
+        if(objLocalizado == null) return;
+        
+        entidades.Remove(objLocalizado);
 
         string stringJson = JsonSerializer.Serialize(entidades);
         string caminhoArquivo = Directory.GetCurrentDirectory() + "/" + nomeArquivo;

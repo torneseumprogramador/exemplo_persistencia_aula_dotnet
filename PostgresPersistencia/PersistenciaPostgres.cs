@@ -1,9 +1,10 @@
 ﻿using ContratoPersistencia;
+using ContratoPersistencia.Atributos;
 using Npgsql;
 
 namespace PostgresPersistencia;
 
-public class PersistenciaPostgres : APersistencia
+public class PersistenciaPostgres<T> : IPersistencia<T>
 {
     public PersistenciaPostgres(string _cnn)
     {
@@ -12,12 +13,14 @@ public class PersistenciaPostgres : APersistencia
 
     private string connString;
 
-    public override void Incluir(IEntity entidade)
+    public void Incluir(T entidade)
     {
+        if(entidade == null) return;
+
         using var conn = new NpgsqlConnection(connString);
         conn.Open();
 
-        var tipoEntidade = entidade.GetType();
+        var tipoEntidade = typeof(T).GetType();
         var nomeTabela = tipoEntidade.Name.ToLower() + "s";
         var campos = string.Join(",", tipoEntidade.GetProperties().Select(pi => pi.Name.ToLower()));
         var valores = string.Join(",", tipoEntidade.GetProperties().Select(pi => "@" + pi.Name));
@@ -35,8 +38,10 @@ public class PersistenciaPostgres : APersistencia
         cmd.ExecuteNonQuery();
     }
 
-    public override void Atualizar(IEntity entidade)
+    public void Atualizar(T entidade)
     {
+        if(entidade == null) return;
+
         using var conn = new NpgsqlConnection(connString);
         conn.Open();
 
@@ -52,23 +57,29 @@ public class PersistenciaPostgres : APersistencia
             if(valor == null) continue;
             cmd.Parameters.AddWithValue(pi.Name.ToLower(), valor);
         }
-        cmd.Parameters.AddWithValue("id", entidade.Id);
+
+        var valorId = buscaValorIdObj(entidade);
+
+        if(valorId == null) 
+            throw new Exception("O valor da identidade não pode ser null");
+
+        cmd.Parameters.AddWithValue("id", valorId);
 
         cmd.ExecuteNonQuery();
     }
 
 
-    public override List<IEntity> Buscar(Type tipoEntidade)
+    public List<T> Buscar()
     {
-        List<IEntity> entidades = new List<IEntity>();
+        List<T> entidades = new List<T>();
         using var conn = new NpgsqlConnection(connString);
         conn.Open();
-        using var cmd = new NpgsqlCommand($"SELECT * FROM {tipoEntidade.Name.ToLower()}s;", conn);
+        using var cmd = new NpgsqlCommand($"SELECT * FROM {typeof(T).Name.ToLower()}s;", conn);
         using var reader = cmd.ExecuteReader();
         while (reader.Read())
         {
-            var entidade = Activator.CreateInstance(tipoEntidade);
-            if(entidade == null) return new List<IEntity>();
+            var entidade = Activator.CreateInstance(typeof(T));
+            if(entidade == null) return new List<T>();
 
             foreach(var pi in entidade.GetType().GetProperties())
             {
@@ -77,17 +88,41 @@ public class PersistenciaPostgres : APersistencia
                 piSet.SetValue(entidade, reader[pi.Name]);
             }
 
-            entidades.Add((IEntity)entidade);
+            entidades.Add((T)entidade);
         }
         return entidades;
     }
 
-    public override void Apagar(IEntity entidade)
+    public void Apagar(T entidade)
     {
+        if(entidade == null) return;
+
         using var conn = new NpgsqlConnection(connString);
         conn.Open();
         using var cmd = new NpgsqlCommand("DELETE FROM clientes WHERE id = @id;", conn);
-        cmd.Parameters.AddWithValue("id", entidade.Id);
+
+        var valorId = buscaValorIdObj(entidade);
+
+        if(valorId == null) 
+            throw new Exception("O valor da identidade não pode ser null");
+            
+        cmd.Parameters.AddWithValue("id", valorId);
         cmd.ExecuteNonQuery();
+    }
+
+    private object? buscaValorIdObj(T entidade)
+    {
+        if(entidade == null) return null;
+        
+        var propriedadeId = entidade.GetType().GetProperties().FirstOrDefault(p => Attribute.IsDefined(p, typeof(IdentidadeAttribute)));
+        if(propriedadeId == null) 
+            throw new Exception("Tipo passado não tem atributo identidade");
+
+        var valorId = propriedadeId.GetValue(entidade);
+
+        if(valorId == null) 
+            throw new Exception("O valor da identidade não pode ser null");
+
+        return valorId;
     }
 }

@@ -5,23 +5,23 @@ using System.IO;
 
 namespace console_app.Servicos
 {
-    public class Persistencia
+    public class Persistencia<T>
     {
-        public Persistencia(APersistencia _persistencia)
+        public Persistencia(IPersistencia<T> _persistencia)
         {
             this.persistencia = _persistencia;
         }
 
-        private APersistencia persistencia;
+        private IPersistencia<T> persistencia;
 
-        public void Salvar(Cliente cliente)
+        public void Salvar(T entidade)
         {
-            persistencia.Incluir(cliente);
+            persistencia.Incluir(entidade);
         }
 
-        public List<IEntity> Lista()
+        public List<T> Lista()
         {
-            return persistencia.Buscar(typeof(Cliente));
+            return persistencia.Buscar();
         }
     }
 }
